@@ -32,5 +32,8 @@
     "eslint": "^9.29.0",
     "mocha": "^11.6.0",
     "rollup": "^4.43.0"
+  },
+  "dependencies": {
+    "redis": "^5.5.6"
   }
 }

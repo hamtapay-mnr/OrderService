@@ -1,25 +1,37 @@
 import * as assert from 'assert'
-import { deduct, inquiry } from '../../Application/order.js'
+import * as order from '../../Application/order.js'
+import { cache } from '../../Infrastructure/cache.js'
 
-describe('Order', function () {
-    describe.skip('asset inquiry', function () {
-        it('should success', function () {
-            const res = inquiry(11)
+// Init cache
+const Cache = new cache()
+await Cache.init()
+
+// Start tests
+describe('Order', async function () {
+    describe('asset inquiry', async function () {
+        before("init cache", function () {
+            Cache.setAsset(10)
+        })
+        it('should success', async function () {
+            const res = await order.canBuy(2, Cache)
             assert.equal(res, true)
         })
-        it('should fail', function () {
-            const res = deduct(2)
-            assert.notEqual(res, false)
+        it('should fail', async function () {
+            const res = await order.canBuy(11, Cache)
+            assert.equal(res, false)
         })
     })
-    describe('deduction', function () {
-        it('should success', function () {
-            const res = deduct(1)
-            assert.equal(res, 1)
+    describe('deduction', async function () {
+        before("init cache", async function () {
+            await Cache.setAsset(10)
         })
-        it('should fail', function () {
-            const res = deduct(2)
-            assert.notEqual(res, 1)
+        it('should success', async function () {
+            const res = await order.deduct(1, Cache)
+            assert.equal(res, 9)
+        })
+        it('should fail', async function () {
+            const res = await order.deduct(2, Cache)
+            assert.equal(res, 7)
         })
     })
 })
