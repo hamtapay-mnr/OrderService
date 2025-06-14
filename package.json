@@ -1,0 +1,36 @@
+{
+  "name": "order-service",
+  "version": "1.0.0-alpha.0",
+  "description": "Recieve order from clien",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --fix",
+    "rollup": "rollup index.js --file index.cjs --format cjs",
+    "test": "npx mocha Src/tests/unit/order.js",
+    "build": "npm run lint && npm run test && npm run unit && npm run rollup && git add . && git commit -am 'scripts'"
+  },
+  "exports": {
+    "import": "./index.js",
+    "require": "./index.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hamtapay-mnr/OrderService.git"
+  },
+  "keywords": [
+    "order",
+    "async"
+  ],
+  "author": "MNR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hamtapay-mnr/OrderService/issues"
+  },
+  "homepage": "https://github.com/hamtapay-mnr/OrderService#readme",
+  "devDependencies": {
+    "eslint": "^9.29.0",
+    "mocha": "^11.6.0",
+    "rollup": "^4.43.0"
+  }
+}
