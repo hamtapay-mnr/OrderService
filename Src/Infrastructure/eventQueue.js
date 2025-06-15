@@ -33,7 +33,12 @@ export class EventQueue {
 
     // Publish event to stream
     async publishEvent(eventData) {
-        const id = await this.eventSource.xAdd(STREAM_KEY, '*', eventData);
+        // const args = [];
+        // for (const [key, value] of Object.entries(eventData)) {
+        //     args.push(key, value);
+        // }
+        const data = JSON.stringify(eventData);
+        const id = await this.eventSource.xAdd(STREAM_KEY, '*', { data });
         return id;
     }
 
