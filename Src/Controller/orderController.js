@@ -22,7 +22,7 @@ export class OrderController {
             if (canBuy)
                 remain = await Order.deduct(amount, this.cache);
             // await this.lock.unlock(lockObj);
-            await this.eventQueue.publishEvent({ currentInventory: amount + remain, bought: remain });
+            await await Order.addToQueue({ currentInventory: amount + remain, bought: amount }, this.eventQueue);
         } catch (error) {
             // Rollback if could not send
             await Order.deductRollback(amount, this.cache);

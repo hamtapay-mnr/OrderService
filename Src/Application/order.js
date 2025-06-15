@@ -54,6 +54,6 @@ export async function canBuy(amount, cache) {
  * @param {Object} queue queue object
  * @return {Promise<>} Promise 
  */
-async function addToQueue(data, queue) {
-    queue.publish(JSON.stringify(data));
+export async function addToQueue(data, eventQueue) {
+    await eventQueue.publishEvent(data);
 }

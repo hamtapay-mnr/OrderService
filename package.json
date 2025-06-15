@@ -1,14 +1,13 @@
 {
   "name": "order-service",
-  "version": "1.0.0-rc.0",
+  "version": "1.0.0-rc.1",
   "description": "Recieve order from client",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint . --fix",
-    "rollup": "rollup index.js --file index.cjs --format cjs",
     "test": "npx mocha Src/tests/unit/orderUnitTests.js",
-    "build": "npm run lint && npm run test && npm run unit && npm run rollup && git add . && git commit -am 'scripts'"
+    "build": "npm run lint && npm run test && git add . && git commit -am 'scripts'"
   },
   "exports": {
     "import": "./index.js",
