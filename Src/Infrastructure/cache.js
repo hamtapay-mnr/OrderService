@@ -10,10 +10,17 @@ export class Cache {
         return this.cache.get(key);
     }
     async setAsset(amount) {
-        return this.#set('asset', amount);
+        const res = await this.#set('asset', amount);
+        if (res == "OK")
+            return await this.#set("max-asset", amount);
+        else
+            throw "Could not set asset";
+    }
+    async getMaxAsset() {
+        return await this.#get('max-asset');
     }
     async getAsset() {
-        return this.#get('asset');
+        return await this.#get('asset');
     }
     async increaseAsset(amount) {
         return this.cache.incrBy('asset', amount);

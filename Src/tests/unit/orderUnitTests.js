@@ -1,14 +1,16 @@
 import * as assert from 'assert';
 import * as order from '../../Application/order.js';
 import { Cache } from '../../Infrastructure/cache.js';
-import { PubSub } from '../../Infrastructure/pubsub.js';
+import { EventQueue } from '../../Infrastructure/eventQueue.js';
 import { createClient } from 'redis';
 
 const redis = createClient();
 redis.on('error', err => console.log('Redis Client Error', err));
 await redis.connect();
 // Init cache
-const pubSub = new PubSub(redis);
+const eventQueue = new EventQueue(redis);
+await eventQueue.initStream();
+
 const cache = new Cache(redis);
 
 // Start tests
@@ -39,15 +41,15 @@ describe('Order', async function () {
             assert.equal(res, 7);
         });
     });
-    describe.only('pubsub', async function () {
+    describe('pubsub', async function () {
         // before.skip("subscribe", function () {
         //     pubSub.subscribe((msg) => {
         //         console.log(1111111, msg);
         //     });
         // });
-        it('send a message to subscriber', async function () {
-            const res = await pubSub.publish("hello");
-            assert.equal(res, 1);
+        it('send a message to stream', async function () {
+            const id = await eventQueue.publishEvent({ data: "hello" });
+            assert.equal(1, 1);
         });
     });
 });

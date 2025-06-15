@@ -4,9 +4,9 @@ import { Cache } from './Src/Infrastructure/cache.js';
 import { Lock } from './Src/Infrastructure/lock.js';
 import { OrderController } from './Src/Controller/orderController.js';
 import Redlock from "redlock";
-import { PubSub } from './Src/Infrastructure/pubsub.js';
+import { EventQueue } from './Src/Infrastructure/eventQueue.js';
 import { createClient } from 'redis';
-import { router } from './Src/Controller/orderRoutes.js';
+import { router } from './router.js';
 
 // Load Dependencies
 const redis = createClient();
@@ -14,14 +14,16 @@ redis.on('error', err => console.log('Redis Client Error', err));
 await redis.connect();
 
 // Inject dependencies
-const pubSub = new PubSub(redis);
+const eventQueue = new EventQueue(redis);
+await eventQueue.initStream();
 const cache = new Cache(redis);
 const lock = new Lock(new Redlock([redis]));
 
 // Instantiate Controller
-const orderController = new OrderController(cache, lock, pubSub);
+const orderController = new OrderController(cache, lock, eventQueue);
 
 const server = createServer(async (req, res) => {
+
     const parsedUrl = parse(req.url, true);
     const path = parsedUrl.pathname;
     if (req.method === 'POST') {
@@ -30,10 +32,16 @@ const server = createServer(async (req, res) => {
             body += chunk.toString();
         });
         req.on('end', async () => {
-            body = JSON.parse(body);
-            const result = await router(path, body, orderController);
-            res.writeHead(result.status, { 'Content-Type': 'text/plain' });
-            res.end(JSON.stringify(result.message));
+            try {
+                body = JSON.parse(body);
+                const result = await router(path, body, orderController);
+                res.writeHead(result.status, { 'Content-Type': 'text/plain' });
+                res.end(JSON.stringify(result.message));
+            } catch (error) {
+                console.log("Fatal Error:", error);
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Something went wrong!');
+            }
         });
     } else {
         res.writeHead(404, { 'Content-Type': 'text/plain' });

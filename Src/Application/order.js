@@ -11,13 +11,26 @@ export function deduct(amount, cache) {
 
 /**
  * @memberOf OrderService.Src.Application.order
+ * @summary Rollback deduct a amount from inventory
+ * @description Get a value and add it to inventory
+ * @param {Number} amount amount of asset
+ * @return {Promise<Object>} Promise
+ */
+export function deductRollback(amount, cache) {
+    return cache.increaseAsset(amount);
+}
+/**
+ * @memberOf OrderService.Src.Application.order
  * @summary Set inventory to amount
  * @description Get a value and set it as inventory asset
  * @param {Number} amount amount of asset
  * @return {Promise<Object>} Promise
  */
-export function setAsset(amount, cache) {
-    return cache.setAsset(amount);
+export async function setAsset(amount, cache) {
+    const result = await cache.setAsset(amount);
+    if (result == 'OK')
+        return await cache.getAsset();
+    return -1;
 }
 
 /**
