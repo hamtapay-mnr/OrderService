@@ -4,7 +4,7 @@ import { Cache } from './Src/Infrastructure/cache.js';
 import { Lock } from './Src/Infrastructure/lock.js';
 import { OrderController } from './Src/Controller/orderController.js';
 import Redlock from "redlock";
-import { PubSub } from './Src/Infrastructure/pubsub.js';
+import { PubSub } from './Src/Infrastructure/eventQueue.js';
 import { createClient } from 'redis';
 import { router } from './Src/Controller/orderRoutes.js';
 
