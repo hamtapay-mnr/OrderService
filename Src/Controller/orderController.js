@@ -1,8 +1,9 @@
 import * as Order from '../Application/order.js';
 export class OrderController {
-    constructor(cache, lock) {
+    constructor(cache, lock, eventQueue) {
         this.cache = cache;
         this.lock = lock;
+        this.eventQueue = eventQueue;
     }
 
     /**
@@ -14,10 +15,20 @@ export class OrderController {
      */
     async makeOrder(amount) {
         // const lockObj = await this.lock.lock();
-        let canBuy = await Order.canBuy(amount, this.cache);
-        if (canBuy)
-            await Order.deduct(amount, this.cache);
-        // await this.lock.unlock(lockObj);
+        let canBuy;
+        try {
+            canBuy = await Order.canBuy(amount, this.cache);
+            let remain = -1;
+            if (canBuy)
+                remain = await Order.deduct(amount, this.cache);
+            // await this.lock.unlock(lockObj);
+            await this.eventQueue.publishEvent({ currentInventory: amount + remain, bought: remain });
+        } catch (error) {
+            // Rollback if could not send
+            await Order.deductRollback(amount, this.cache);
+            throw "Failed to submit order: " + error;
+        }
+
         return canBuy;
     }
 
@@ -30,16 +41,5 @@ export class OrderController {
      */
     async setAsset(amount) {
         return Order.setAsset(amount, this.cache);
-    }
-
-    /**
-         * @memberOf OrderService.Src.Controller.orderController
-         * @summary Put request in queue for next service to work
-         * @description Put request in queue for next service to work
-         * @param {Object} data data to enqueue!
-         * @return {Promise<>} Promise 
-         */
-    async addToQueue(data) {
-
     }
 }
