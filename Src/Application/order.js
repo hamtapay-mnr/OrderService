@@ -3,10 +3,21 @@
  * @summary Deduct a amount from inventory
  * @description Get a value and deduct it from inventory
  * @param {Number} amount amount of asset
- * @return {Promise<Object>} Promise {output, state}
+ * @return {Promise<Object>} Promise
  */
 export function deduct(amount, cache) {
     return cache.decreaseAsset(amount)
+}
+
+/**
+ * @memberOf OrderService.Src.Application.order
+ * @summary Set inventory to amount
+ * @description Get a value and set it as inventory asset
+ * @param {Number} amount amount of asset
+ * @return {Promise<Object>} Promise
+ */
+export function setAsset(amount, cache) {
+    return cache.setAsset(amount)
 }
 
 /**

@@ -5,7 +5,7 @@ import { Lock } from './Src/Infrastructure/lock.js';
 import { OrderController } from './Src/Controller/orderController.js';
 import Redlock from "redlock";
 
-
+// Initiate Objects
 const cache = new Cache();
 await cache.init();
 const redlock = new Redlock([cache]);
@@ -25,12 +25,14 @@ const server = createServer(async (req, res) => {
             let result = false;
             if (path === '/buy')
                 result = await orderController.makeOrder(body.amount);
+            if (path === '/add')
+                result = await orderController.setAsset(body.amount);
             if (result) {
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
-                res.end('Order submitted!');
+                res.end('Done!');
             } else {
                 res.writeHead(500, { 'Content-Type': 'text/html' });
-                res.end('Not enough resource!');
+                res.end('Failed!');
             }
         });
 
