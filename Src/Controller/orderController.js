@@ -31,15 +31,4 @@ export class OrderController {
     async setAsset(amount) {
         return Order.setAsset(amount, this.cache);
     }
-
-    /**
-         * @memberOf OrderService.Src.Controller.orderController
-         * @summary Put request in queue for next service to work
-         * @description Put request in queue for next service to work
-         * @param {Object} data data to enqueue!
-         * @return {Promise<>} Promise 
-         */
-    async addToQueue(data) {
-
-    }
 }

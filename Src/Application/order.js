@@ -6,7 +6,7 @@
  * @return {Promise<Object>} Promise
  */
 export function deduct(amount, cache) {
-    return cache.decreaseAsset(amount)
+    return cache.decreaseAsset(amount);
 }
 
 /**
@@ -17,7 +17,7 @@ export function deduct(amount, cache) {
  * @return {Promise<Object>} Promise
  */
 export function setAsset(amount, cache) {
-    return cache.setAsset(amount)
+    return cache.setAsset(amount);
 }
 
 /**
@@ -29,6 +29,18 @@ export function setAsset(amount, cache) {
  * @return {Promise<Boolean>} Promise
  */
 export async function canBuy(amount, cache) {
-    const currentAsset = await cache.getAsset()
-    return amount <= currentAsset
+    const currentAsset = await cache.getAsset();
+    return amount <= currentAsset;
+}
+
+/**
+ * @memberOf OrderService.Src.Application.order
+ * @summary Put request in queue for next service to work
+ * @description Put request in queue for next service to work
+ * @param {Object} data data to enqueue!
+ * @param {Object} queue queue object
+ * @return {Promise<>} Promise 
+ */
+async function addToQueue(data, queue) {
+    queue.publish(JSON.stringify(data));
 }

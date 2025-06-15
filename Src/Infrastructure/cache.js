@@ -1,29 +1,25 @@
-import { createClient } from 'redis'
 export class Cache {
-    constructor() {
-        this.client = createClient();
-        this.client.on('error', err => console.log('Redis Client Error', err));
+    constructor(cache) {
+        this.cache = cache;
     }
-    async init() {
-        this.client.connect();
-    }
+
     async #set(key, value) {
-        return this.client.set(key, value);
+        return this.cache.set(key, value);
     }
     async #get(key) {
-        return this.client.get(key);
+        return this.cache.get(key);
     }
     async setAsset(amount) {
-        return this.#set('asset', amount)
+        return this.#set('asset', amount);
     }
     async getAsset() {
-        return this.#get('asset')
+        return this.#get('asset');
     }
     async increaseAsset(amount) {
-        return this.client.incrBy('asset', amount)
+        return this.cache.incrBy('asset', amount);
     }
     async decreaseAsset(amount) {
-        return this.client.decrBy('asset', amount)
+        return this.cache.decrBy('asset', amount);
     }
 }
 
