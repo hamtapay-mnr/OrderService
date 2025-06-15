@@ -1,5 +1,5 @@
 import { createClient } from 'redis'
-export class cache {
+export class Cache {
     constructor() {
         this.client = createClient();
         this.client.on('error', err => console.log('Redis Client Error', err));

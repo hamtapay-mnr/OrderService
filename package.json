@@ -1,13 +1,13 @@
 {
   "name": "order-service",
   "version": "1.0.0-alpha.0",
-  "description": "Recieve order from clien",
+  "description": "Recieve order from client",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "lint": "eslint . --fix",
     "rollup": "rollup index.js --file index.cjs --format cjs",
-    "test": "npx mocha Src/tests/unit/order.js",
+    "test": "npx mocha Src/tests/unit/orderUnitTests.js",
     "build": "npm run lint && npm run test && npm run unit && npm run rollup && git add . && git commit -am 'scripts'"
   },
   "exports": {
@@ -34,6 +34,8 @@
     "rollup": "^4.43.0"
   },
   "dependencies": {
-    "redis": "^5.5.6"
+    "redis": "^5.5.6",
+    "redis-lock": "^1.0.0",
+    "redlock": "^5.0.0-beta.2"
   }
 }
