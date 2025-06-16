@@ -14,15 +14,18 @@ export class OrderController {
      * @return {Promise<Boolean>} Promise return true if order submitted, return false if order is invalid
      */
     async makeOrder(amount) {
-        // const lockObj = await this.lock.lock();
+
         let canBuy;
         try {
+            // const lockObj = await this.lock.lock();
             canBuy = await Order.canBuy(amount, this.cache);
             let remain = -1;
-            if (canBuy)
+            if (canBuy) {
                 remain = await Order.deduct(amount, this.cache);
+                console.log("Ordered: ", amount, ", Remained: ", remain);
+                await this.eventQueue.publishEvent({ currentInventory: amount + remain, bought: amount });
+            }
             // await this.lock.unlock(lockObj);
-            await this.eventQueue.publishEvent({ currentInventory: amount + remain, bought: remain });
         } catch (error) {
             // Rollback if could not send
             await Order.deductRollback(amount, this.cache);
