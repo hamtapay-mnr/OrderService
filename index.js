@@ -11,6 +11,7 @@ import { router } from './router.js';
 // Simulate .env file (no internet to npm i dotenv!)
 process.env.STREAM_KEY_WRITE = 'new-order';
 process.env.GROUP_NAME = 'order_group';
+process.env.PORT = 3000;
 
 // Load Dependencies
 const redis = createClient();
@@ -54,7 +55,6 @@ const server = createServer(async (req, res) => {
 });
 
 
-const port = 3000;
-server.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}/`);
+server.listen(process.env.PORT, () => {
+    console.log(`Server running at http://localhost:${process.env.PORT}/`);
 });
