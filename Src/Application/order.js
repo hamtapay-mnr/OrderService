@@ -28,6 +28,7 @@ export function deductRollback(amount, cache) {
  */
 export async function setAsset(amount, cache) {
     const result = await cache.setAsset(amount);
+    await cache.setAdminWarning("0"); // reset admin warning flag
     if (result == 'OK')
         return await cache.getAsset();
     return -1;

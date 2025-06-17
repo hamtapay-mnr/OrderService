@@ -13,16 +13,18 @@ export class OrderController {
      * @param {Number} amount amount of asset
      * @return {Promise<Boolean>} Promise return true if order submitted, return false if order is invalid
      */
-    async makeOrder(amount) {
+    async makeOrder(data) {
 
         let canBuy;
         try {
             // const lockObj = await this.lock.lock();
-            canBuy = await Order.canBuy(amount, this.cache);
+            canBuy = await Order.canBuy(data.amount, this.cache);
             let remain = -1;
             if (canBuy) {
-                remain = await Order.deduct(amount, this.cache);
-                await await Order.addToQueue({ currentInventory: amount + remain, bought: amount }, this.eventQueue);
+                remain = await Order.deduct(data.amount, this.cache);
+                const orderObj = { currentInventory: data.amount + remain, bought: data.amount, username: data.username };
+                console.log("Ordered: ", orderObj, ", Remained: ", remain);
+                await this.eventQueue.publishEvent(orderObj);
             }
             // await this.lock.unlock(lockObj);
         } catch (error) {
@@ -41,7 +43,7 @@ export class OrderController {
      * @param {Number} amount amount of asset
      * @return {Promise<>} Promise 
      */
-    async setAsset(amount) {
-        return Order.setAsset(amount, this.cache);
+    async setAsset(data) {
+        return Order.setAsset(data.amount, this.cache);
     }
 }

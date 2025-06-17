@@ -8,5 +8,48 @@
 - بازیابی قیمت به روز شده نباید به دیتابیس بار اضافی وارد کند.
 - قابلیت مقیاس پذیری
 
+
+# نحوه راه اندازی
+این سرویس به پکیج های زیر وابسته است
+```
+node v22
+redis v5
+redlock v5
+```
+برای نصب دستور زیر را اجرا کنید:
+```
+npm i
+```
+
+برای اجرا دستور زیر را اجرا کنید
+```
+node index.js
+OR
+npm start
+```
+سرویس هنگام استارت تلاش میکند که صف های مورد نیازش را بسازد.
+```
+Creating group:  new-order order_group
+Server running at http://localhost:3000/
+```
+به ازای هر درخواست خرید این سرویس رخدادی به صف سفارشات اضافه میکند که به شکل زیر است:
+
+```
+currentInventory مقدار طلای باقی مانده قبل از برداشت
+bought میزان خریداری شده
+username نام کاربری خریدار
+```
+به ازای هر سفارش جدیدی که دریافت شود سرویس لاگ زیر را ایجاد میکند.
+```
+Ordered:  { currentInventory: 1, bought: 1, username: 'milad' } , Remained:  0
+Request to  /buy  with input:  { amount: 1, username: 'milad' } , Result: { status: 200, message: { en: 'Order submitted' } }
+```
+به ازای تغییر میزان موجودی سرویس لاگ زیر را تولید میکند.
+```
+Request to  /add  with input:  { amount: 100 } , Result: { status: 200, message: { en: 'Inventory has 100' } }
+```
+
 ## نحوه استفاده
 برای استفاده از این سرویس فایل [API](./Docs/API.md) را مطالعه فرمایید.
+ترتیب اجرای سرویس نسبت به سایر سرویس های سامانه مهم نیست.   
+این سرویس state-less است و در صورت نیاز میتوانید چند نسخه از این سرویس بالا بیاورید.

@@ -28,6 +28,9 @@ export class Cache {
     async decreaseAsset(amount) {
         return this.cache.decrBy('asset', amount);
     }
+    async setAdminWarning(state) {
+        return await this.#set('admin-warning-flag', state);
+    }
 }
 
 
