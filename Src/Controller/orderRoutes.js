@@ -1,6 +1,6 @@
 export const OrderRoutes = {
     '/buy': async (data, controller) => {
-        const result = await controller.makeOrder(data.amount);
+        const result = await controller.makeOrder(data);
         if (result)
             return {
                 status: 200,
@@ -14,7 +14,7 @@ export const OrderRoutes = {
         }
     },
     '/add': async (data, controller) => {
-        const result = await controller.setAsset(data.amount);
+        const result = await controller.setAsset(data);
         return {
             status: 200,
             message: { en: "Inventory has " + result }

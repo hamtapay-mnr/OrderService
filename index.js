@@ -8,13 +8,17 @@ import { EventQueue } from './Src/Infrastructure/eventQueue.js';
 import { createClient } from 'redis';
 import { router } from './router.js';
 
+// Simulate .env file (no internet to npm i dotenv!)
+process.env.STREAM_KEY_WRITE = 'new-order';
+process.env.GROUP_NAME = 'order_group';
+
 // Load Dependencies
 const redis = createClient();
 redis.on('error', err => console.log('Redis Client Error', err));
 await redis.connect();
 
 // Inject dependencies
-const eventQueue = new EventQueue(redis);
+const eventQueue = new EventQueue(redis, process.env.STREAM_KEY_READ, process.env.STREAM_KEY_WRITE, process.env.GROUP_NAME, process.env.CONSUMER_NAME);
 await eventQueue.initStream();
 const cache = new Cache(redis);
 const lock = new Lock(new Redlock([redis]));
